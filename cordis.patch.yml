@@ -1,0 +1,14 @@
+# ============================================================================
+# dsh-sidebar-tidy —— DSH bundle patch（挂载声明）
+# ============================================================================
+# DSH 启动时按 bundle 层栈叠加各插件 patch，本文件把本插件挂进配置树。
+# 宿主半 lib/index.js 是空实现（本插件只改客户端的侧栏），
+# 浏览器半由 dsh.client.platform=web + exports["./client"] 交给 dsh-web-app 加载。
+#
+# 安装：把本目录 link 进 profile 的 node_modules，并在
+#   ~/.dsh/profiles/<profile>/package.json 的 dsh.profile.bundles 里登记 "dsh-sidebar-tidy"。
+# ============================================================================
+
+- insert:
+    - id: sidebar-tidy
+      name: dsh-sidebar-tidy
