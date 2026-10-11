@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — 2026-10-11
+
+新增设置页，两种展开方式可选。
+
+- **新增设置页「侧栏收纳」**（`settings.section` 槽）：用 DSH 官方 `SegmentedControl` 在「悬停展开 / 点击展开」之间切换，取不到该包时退回自绘控件。
+- **新增「记住展开状态」开关**（官方 `Switch`）：只在「点击展开」模式下可用；打开后开合状态跨刷新保留，关掉即清除记录。
+- **点击展开模式**：点击入口行展开 / 收起，文案在「更多 / 收起」间切换；此模式下不再有 220ms 延迟收起。
+- 默认仍是 **悬停展开、不记忆**，与 0.1.1 行为一致；选择本身记在 `localStorage["dsh-sidebar-tidy:mode"]`（`hover` / `click`），开合状态记在 `dsh-sidebar-tidy:click-open`。
+- 设置页文案跟随 DSH 语言（中文「展开方式」/「记住展开状态」，英文 "Expansion mode" / "Remember the expansion state"）。
+- 折叠态提示点、失败安全（自检后才写 `html[data-dsh-sidebar-tidy]`）等既有设计不变。
+
 ## 0.1.1 — 2026-10-11
 
 交互改为悬停，不再需要点击。
