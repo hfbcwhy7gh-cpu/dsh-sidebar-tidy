@@ -1,6 +1,6 @@
 {
   "name": "dsh-sidebar-tidy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "把 DSH 侧栏的全局面板图标收纳进底部的「更多」折叠入口：新会话在最上、工作区居中、插件入口在最下。",
   "keywords": [
     "dsh",
