@@ -21,7 +21,8 @@
 | Expanded (click mode, optional) | Same as above; the entry row reads "Collapse" while open |
 | Entries kept outside (optional) | The entries you tick move back **below New session, above Workspaces**; the rest stay in the "More" group |
 
-- **Moving the pointer onto the "⋯ More" row expands it in place; moving away folds it back** (no popover). The fold is delayed by 220 ms so a grazing pointer does not make it flicker.
+- **Moving the pointer onto the "⋯ More" icon expands it in place; moving away folds it back** (no popover). Once open, any point inside the row keeps it open, and the fold — delayed by 220 ms — only happens after the pointer leaves the row entirely, so a grazing pointer does not make it flicker.
+- **The trigger area is just that icon** (2 px of slack around it): the rest of the row — the long "More" text strip in the wide sidebar and the padding above and below the icon — never pops the group open. Tune the `HIT_PAD` constant at the top of `lib/client.js` for a looser feel.
 - Prefer clicking? **Settings → Sidebar tidy → Expansion mode** switches between the two schemes at any time (see the next section).
 - Want an entry to skip the group entirely? **Settings → Sidebar tidy → Entries kept out of the group**, one switch per entry (see the section after that).
 - Keyboard users: focusing the entry row (Tab) expands it, losing focus folds it back.
@@ -34,7 +35,7 @@
 
 | Scheme | Interaction | State memory |
 | --- | --- | --- |
-| **Hover** (default) | Expands as the pointer enters, folds about 0.2 s after it leaves; clicking the row changes nothing | Not remembered — a reload starts collapsed |
+| **Hover** (default) | Expands when the pointer enters the row's **icon** (blank parts of the row never trigger it), folds about 0.2 s after the pointer leaves the row; clicking the row changes nothing | Not remembered — a reload starts collapsed |
 | **Click** | Click the "More" row to expand / collapse; its label flips between "More" and "Collapse" | Optional: with "Remember the expansion state" on, the state survives a reload |
 
 - Switching happens inside **Settings → Sidebar tidy** (a segmented control) and takes effect immediately — no restart needed.
@@ -93,7 +94,7 @@ The settings page is a second registration into the `settings.section` slot (`id
 
 ## Verified environment
 
-- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: hover-to-expand / move-away-to-fold (including the 220 ms delay), keyboard focus open/close, the collapsed-state dot, localized labels and tooltip, both schemes in the settings page, the "remember" switch surviving a reload, **keeping individual entries out of the group** (the row returns below New session, hover no longer springs the group open, and the choice survives a reload), and a clean rollback after uninstall.
+- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: hover-to-expand / move-away-to-fold (including the 220 ms delay), a hover hit area limited to the icon (pointing at the "More" text or at blank row space does not expand), keyboard focus open/close, the collapsed-state dot, localized labels and tooltip, both schemes in the settings page, the "remember" switch surviving a reload, **keeping individual entries out of the group** (the row returns below New session, hover no longer springs the group open, and the choice survives a reload), and a clean rollback after uninstall.
 - Coexists with the `dsh-claude-style` skin (it neither touches the sidebar layout classes nor sets `order` on them). Note that the skin collapses `sidebar.footer.action` / the settings row to 0×0, which is why this plugin's entry lives in the last row of `panelList` instead of a footer slot; the settings page still opens normally (the skin merely moves its launcher into its own account popover).
 - If another plugin replaces the whole `sidebar` slot (`replaceRisk: shadows-shipped-ui`), the sidebar looks completely different and this plugin silently disables itself via the self-check.
 
