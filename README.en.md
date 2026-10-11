@@ -17,12 +17,13 @@
 | State | Sidebar, top to bottom |
 | --- | --- |
 | Collapsed (default) | Brand row → New session → **Workspaces (session list, fills the remaining space)** → "⋯ More" → footer user/settings row |
-| Expanded | Brand row → New session → **Workspaces (session list)** → Plugins / Schedules / Context Insights / Skills + "Collapse" → footer user/settings row |
+| Expanded (on hover) | Brand row → New session → **Workspaces (session list)** → Plugins / Schedules / Context Insights / Skills + "More" → footer user/settings row |
 
-- Clicking "⋯ More" expands **in place** (no popover); clicking "Collapse" folds it back.
-- The state is stored in `localStorage["dsh-sidebar-tidy:folded"]` (`folded` / `expanded`) and survives reloads.
+- **Moving the pointer onto the "⋯ More" row expands it in place; moving away folds it back** (no popover). The fold is delayed by 220 ms so a grazing pointer does not make it flicker.
+- **No clicking needed**: the entry row no longer toggles anything, and the open/closed state is no longer remembered (the `localStorage["dsh-sidebar-tidy:folded"]` key written by 0.1.0 is removed).
+- Keyboard users: focusing the entry row (Tab) expands it, losing focus folds it back.
 - While collapsed, if a hidden panel is the currently selected one (`aria-current="page"`), a small dot appears on the entry icon.
-- Labels follow the DSH locale: "更多 / 收起" in Chinese, "More / Collapse" in English.
+- Labels follow the DSH locale: "更多" in Chinese, "More" in English; the `title` tooltip says "悬停展开，移开收起" / "Hover to expand · move away to fold".
 
 ## Install
 
@@ -37,7 +38,7 @@
 
 ## Uninstall
 
-Remove the line from `dsh.profile.bundles` and restart DeepSeek Harness; optionally delete `localStorage["dsh-sidebar-tidy:folded"]`.
+Remove the line from `dsh.profile.bundles` and restart DeepSeek Harness — that is all (the plugin uses no `localStorage` and leaves no residue).
 
 ## How it works (and why it is this small)
 
@@ -60,7 +61,7 @@ The entry button itself is registered through the normal client slot API (`ctx.s
 
 ## Verified environment
 
-- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: collapse / expand, remembered state across reloads, the collapsed-state dot, localized labels, and a clean rollback after uninstall.
+- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: hover-to-expand / move-away-to-fold (including the 220 ms delay), keyboard focus open/close, the collapsed-state dot, localized labels and tooltip, and a clean rollback after uninstall.
 - Coexists with the `dsh-claude-style` skin (it neither touches the sidebar layout classes nor sets `order` on them). Note that the skin collapses `sidebar.footer.action` / the settings row to 0×0, which is why this plugin's entry lives in the last row of `panelList` instead of a footer slot.
 - If another plugin replaces the whole `sidebar` slot (`replaceRisk: shadows-shipped-ui`), the sidebar looks completely different and this plugin silently disables itself via the self-check.
 
