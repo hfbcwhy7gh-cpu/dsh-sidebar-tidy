@@ -17,28 +17,30 @@
 | State | Sidebar, top to bottom |
 | --- | --- |
 | Collapsed (default) | Brand row → New session → **Workspaces (session list, fills the remaining space)** → "⋯ More" → footer user/settings row |
-| Expanded (hover mode, default) | Brand row → New session → **Workspaces (session list)** → Plugins / Schedules / Context Insights / Skills + "More" → footer user/settings row |
+| Expanded (hover mode, default) | Brand row → New session → **Workspaces (session list)** → Plugins / Schedules / Context Insights / Usage stats / Skills + "More" → footer user/settings row |
+| Hover “More” (optional) | Same as above; it expands only when the pointer comes near the “More” label (or the icon beside it) — sweeping the rest of the row does nothing — and clicking anywhere on the row expands it too |
 | Expanded (click mode, optional) | Same as above; the entry row reads "Collapse" while open |
 | Entries kept outside (optional) | The entries you tick move back **below New session, above Workspaces**; the rest stay in the "More" group |
 
 - **Moving the pointer onto the "⋯ More" row expands it in place; moving away folds it back** (no popover). The fold is delayed by 220 ms so a grazing pointer does not make it flicker.
-- Prefer clicking? **Settings → Sidebar tidy → Expansion mode** switches between the two schemes at any time (see the next section).
+- Want a different trigger? **Settings → Sidebar tidy → Expansion mode** switches between **three** schemes at any time (see the next section): the whole row on hover, only the “More” label (clicking the row works too), or click to toggle.
 - Want an entry to skip the group entirely? **Settings → Sidebar tidy → Entries kept out of the group**, one switch per entry (see the section after that).
 - Keyboard users: focusing the entry row (Tab) expands it, losing focus folds it back.
 - While collapsed, if a hidden panel is the currently selected one (`aria-current="page"`), a small dot appears on the entry icon.
-- Labels follow the DSH locale: "更多" in Chinese, "More" in English; the `title` tooltip says "悬停展开，移开收起" / "Hover to expand · move away to fold".
+- Labels follow the DSH locale: "更多" in Chinese, "More" in English; the `title` tooltip follows the scheme ("Hover to expand · move away to fold", "Hover the “More” label to expand · clicking the row works too", or "Click to expand or collapse").
 
-## Two expansion schemes (Settings → Sidebar tidy)
+## Three expansion schemes (Settings → Sidebar tidy)
 
 ![Settings page: Sidebar tidy](docs/settings.jpg)
 
 | Scheme | Interaction | State memory |
 | --- | --- | --- |
 | **Hover** (default) | Expands as the pointer enters, folds about 0.2 s after it leaves; clicking the row changes nothing | Not remembered — a reload starts collapsed |
+| **Hover “More”** | Expands only when the pointer comes near the “More” label (and the icon beside it, padded by 6 px each way); sweeping the rest of the row does nothing. **Clicking anywhere on the row expands it too** | Not remembered — a reload starts collapsed |
 | **Click** | Click the "More" row to expand / collapse; its label flips between "More" and "Collapse" | Optional: with "Remember the expansion state" on, the state survives a reload |
 
 - Switching happens inside **Settings → Sidebar tidy** (a segmented control) and takes effect immediately — no restart needed.
-- The choice itself lives in `localStorage["dsh-sidebar-tidy:mode"]`; when remembering is on, the open/closed state lives in `dsh-sidebar-tidy:click-open`.
+- The choice itself lives in `localStorage["dsh-sidebar-tidy:mode"]` (`hover` / `label` / `click`); when remembering is on, the open/closed state lives in `dsh-sidebar-tidy:click-open`.
 - The page is drawn with DSH's own UI primitives (`SegmentedControl` / `Switch`); if that package cannot be resolved it falls back to self-drawn controls, so the feature still works.
 - The default state (no `localStorage` at all) is exactly the 0.1.1 behaviour: hover to expand, nothing remembered.
 
@@ -93,7 +95,7 @@ The settings page is a second registration into the `settings.section` slot (`id
 
 ## Verified environment
 
-- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: hover-to-expand / move-away-to-fold (including the 220 ms delay), keyboard focus open/close, the collapsed-state dot, localized labels and tooltip, both schemes in the settings page, the "remember" switch surviving a reload, **keeping individual entries out of the group** (the row returns below New session, hover no longer springs the group open, and the choice survives a reload), and a clean rollback after uninstall.
+- Verified on a live **DSH 0.2.0-rc.2 (Windows, desktop profile)**: hover-to-expand / move-away-to-fold (including the 220 ms delay), keyboard focus open/close, the collapsed-state dot, localized labels and tooltip, **all three schemes** in the settings page, **the “Hover “More”” hit box** (sweeping the rest of the row does nothing, moving onto the label expands, clicking anywhere on the row expands, and the icon-only rail still expands), the "remember" switch surviving a reload, **keeping individual entries out of the group** (the row returns below New session, hover no longer springs the group open, and the choice survives a reload), and a clean rollback after uninstall.
 - Coexists with the `dsh-claude-style` skin (it neither touches the sidebar layout classes nor sets `order` on them). Note that the skin collapses `sidebar.footer.action` / the settings row to 0×0, which is why this plugin's entry lives in the last row of `panelList` instead of a footer slot; the settings page still opens normally (the skin merely moves its launcher into its own account popover).
 - If another plugin replaces the whole `sidebar` slot (`replaceRisk: shadows-shipped-ui`), the sidebar looks completely different and this plugin silently disables itself via the self-check.
 
